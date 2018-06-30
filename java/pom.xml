@@ -19,8 +19,7 @@
     </properties>
 
     <dependencies>
-        <!-- These are example dependencies that you can use - feel free to swap them for any other library that does the job! -->
-        <!--
+        <!-- These are example dependencies that you can use - feel free to swap them for any other library that does the job! -->        
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-csv</artifactId>
@@ -31,7 +30,7 @@
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
         </dependency>
-        -->
+        
 
 
 
