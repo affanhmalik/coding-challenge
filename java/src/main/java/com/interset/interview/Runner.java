@@ -1,8 +1,12 @@
 package com.interset.interview;
 
-
-import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.List;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 
 public class Runner {
 
@@ -28,7 +32,30 @@ public class Runner {
             System.exit(1);
         }
 
-        System.out.println("Do cool stuff here!!");
+//        System.out.println("Do cool stuff here!!");
+                
+        // Run Json file loader 
+        jsonLoad(args[0]);
+        
 
     }
+    
+    // Simple function to read a json file and create a list of Person objects    
+    public static void jsonLoad(String inputFile) {
+	    	JsonReader reader = null;
+			try {
+				reader = new JsonReader(new FileReader(inputFile));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+	    	List<Person> jsonPersons = new Gson().fromJson(
+	    	                                reader, 
+	    	                                new TypeToken<List<Person>>() {}.getType());
+	
+	    	for (Person jsonPerson : jsonPersons) {	    		
+	    		System.out.println(jsonPerson);
+	    	}
+    }
+    
+    
 }
