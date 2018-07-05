@@ -22,16 +22,16 @@ public class Person {
 		this.siblings = siblings;
 		this.favourite_food = favouriteFood;
 		this.birth_timezone = timeZoneOffset;
-		this.birth_timestamp = birthTimestamp;		
+		this.birth_timestamp = birthTimestamp;
 		
 	}
 	
+	public ZonedDateTime getBirthDateTime() {
+		ZonedDateTime birthDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(this.getBirth_timestamp()),ZoneId.of(this.getBirth_timzone()));
+		return birthDateTime;
+	}
 	public int getBirthMonth() {		
-		ZoneId birthTimeZone = ZoneId.of(this.getBirth_timzone());		
-//		ZoneId birthTimeZone = ZoneId.of("+00:00");
-		Instant birthDayInstant = Instant.ofEpochMilli(this.getBirth_timestamp());
-		ZonedDateTime birthDateTime = ZonedDateTime.ofInstant(birthDayInstant,birthTimeZone);
-		return birthDateTime.getMonthValue();
+		return this.getBirthDateTime().getMonthValue();
 	}
 	
 	public String getFirst_name() {
@@ -108,6 +108,6 @@ public class Person {
 	@Override
 	public String toString() {
 		
-		return "Person Name: " + this.first_name + " " + this.last_name + " , Siblings: " + this.siblings + " Born: " + Instant.ofEpochMilli(this.birth_timestamp) + ", Timezone: " + this.birth_timezone + ", Favorite Food: " + this.favourite_food ;
+		return "Person Name: " + this.first_name + " " + this.last_name + " , Siblings: " + this.siblings + ", Born: " + this.getBirthDateTime() + ", Favorite Food: " + this.favourite_food ;
 	}
 }

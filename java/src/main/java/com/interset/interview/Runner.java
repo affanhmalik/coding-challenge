@@ -33,15 +33,20 @@ public class Runner {
         }
 
 //        System.out.println("Do cool stuff here!!");
+        
+//        List<Person> jsonPersons = jsonLoad(args[0]);
+//	    	for (Person jsonPerson : jsonPersons) {	    		
+//	    		System.out.println(jsonPerson);
+//	    	}
                 
         // Run Json file loader 
-        jsonLoad(args[0]);
+        getAverageSiblings(jsonLoad(args[0]));
         
 
     }
     
     // Simple function to read a json file and create a list of Person objects    
-    public static void jsonLoad(String inputFile) {
+    public static List<Person> jsonLoad(String inputFile) {
 	    	JsonReader reader = null;
 			try {
 				reader = new JsonReader(new FileReader(inputFile));
@@ -51,10 +56,21 @@ public class Runner {
 	    	List<Person> jsonPersons = new Gson().fromJson(
 	    	                                reader, 
 	    	                                new TypeToken<List<Person>>() {}.getType());
-	
-	    	for (Person jsonPerson : jsonPersons) {	    		
-	    		System.out.println(jsonPerson);
-	    	}
+	    	return jsonPersons;
+    }
+    
+    // Function to return average ( rounded up) of siblings for a List<Person>        
+    public static int getAverageSiblings(List<Person> personsList) {
+    		double average = personsList.stream()
+                .mapToInt(p -> p.getSiblings())
+                .average()
+                .orElse(0);
+    		return (int) Math.ceil(average);
+    }
+    
+    // Function to return a list of favorite foods and counts in sorted order
+    public static void getTopFaviorteFoods(List<Person> personList) {
+    		
     }
     
     
