@@ -2,7 +2,14 @@ package com.interset.interview;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -32,16 +39,14 @@ public class Runner {
             System.exit(1);
         }
 
-//        System.out.println("Do cool stuff here!!");
-        
-//        List<Person> jsonPersons = jsonLoad(args[0]);
-//	    	for (Person jsonPerson : jsonPersons) {	    		
-//	    		System.out.println(jsonPerson);
-//	    	}
+
                 
-        // Run Json file loader 
-        getAverageSiblings(jsonLoad(args[0]));
+        // Run Json file loader to get a Persons list
+        List<Person> jsonPersons = jsonLoad(args[0]);
         
+        // Print output
+        printOutput(jsonPersons);
+
 
     }
     
@@ -69,8 +74,47 @@ public class Runner {
     }
     
     // Function to return a list of favorite foods and counts in sorted order
-    public static void getTopFaviorteFoods(List<Person> personList) {
+    public static List<Entry<String, Integer>> getFaviorteFoodsCount(List<Person> personList) {
+    	
+    		HashMap<String, Integer> map = new HashMap<>();
     		
+    		for (Person person : personList) {
+    			String favoriteFood = person.getFavourite_food();
+    			Integer count = map.get(favoriteFood);
+    			if (count == null) {
+    				map.put(favoriteFood,1);
+    			}
+    			else {
+    				map.put(favoriteFood,count + 1);
+    			}
+    		}
+    		
+    		List<Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(map.entrySet());
+    		
+    		Collections.sort(list, new Comparator<Entry<String, Integer>>() {
+    			public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+    				return (o2.getValue()).compareTo(o1.getValue());
+    			}
+    		});
+    		
+    		return list;
+
+    }
+    
+    public static void printOutput(List<Person> personsList) {
+        // Get average siblig count
+        System.out.println("Average siblings: " + getAverageSiblings(personsList));
+        
+        // Get a list of favorite foods and their counts (unsorted) 
+        List<Entry<String, Integer>> faviorteFoodsCount = getFaviorteFoodsCount(personsList);
+        System.out.print("Three favourite foods: ");
+        
+        System.out.print(faviorteFoodsCount.get(0).getKey() + " (" + faviorteFoodsCount.get(0).getValue() + "), ");
+        System.out.print(faviorteFoodsCount.get(1).getKey() + " (" + faviorteFoodsCount.get(1).getValue() + "), ");
+        System.out.println(faviorteFoodsCount.get(2).getKey() + " (" + faviorteFoodsCount.get(2).getValue() + ") ");
+        
+        
+        
     }
     
     

@@ -3,11 +3,6 @@ package com.interset.interview;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-
 /**
  * Unit test for Runner
  */
