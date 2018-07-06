@@ -2,6 +2,7 @@ package com.interset.interview;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.time.Month;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ public class Runner {
         // Print output
         printOutput(jsonPersons);
 
+        
 
     }
     
@@ -101,6 +103,18 @@ public class Runner {
 
     }
     
+    public static int[] getBirthMonthCounts(List<Person> personsList) {
+		int[] output = new int[12];
+		
+		for (Person person : personsList) {
+			int birthMonth = person.getBirthMonth()-1;			
+			Integer count = output[birthMonth];
+
+			output[birthMonth]=count + 1;
+		}
+		return output;
+    } 
+    
     public static void printOutput(List<Person> personsList) {
         // Get average siblig count
         System.out.println("Average siblings: " + getAverageSiblings(personsList));
@@ -113,9 +127,24 @@ public class Runner {
         System.out.print(faviorteFoodsCount.get(1).getKey() + " (" + faviorteFoodsCount.get(1).getValue() + "), ");
         System.out.println(faviorteFoodsCount.get(2).getKey() + " (" + faviorteFoodsCount.get(2).getValue() + ") ");
         
+        // How many people were born in each month
+        int[] birthMonths = getBirthMonthCounts(personsList);
+        System.out.print("Birth Months: ");
+        for(int n=1;n<12;n++) {
+        		String month = Month.of(n).name().toLowerCase();
+        		month = month.substring(0, 1).toUpperCase() + month.substring(1);        		
+        		System.out.print(month + " (" + birthMonths[n-1] + ")" + ", ");
+        		
+        }
+        
+        String lastMonth = Month.of(12).name().toLowerCase();
+		lastMonth = lastMonth.substring(0, 1).toUpperCase() + lastMonth.substring(1);
+        
+        System.out.print(lastMonth + " (" + birthMonths[11] + ")");
         
         
     }
     
+
     
 }

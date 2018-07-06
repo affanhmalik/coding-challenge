@@ -4,6 +4,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -46,6 +47,14 @@ public class RunnerTest
     		// Test 2
     		testGetFaviorteFoodsCountFunction(personsList, expectedList);
     		
+    		// Create expected output array for birthdates in each month
+    		int[] test = new int[12];
+    		test[0]=5;
+    		test[9]=1;
+    		
+    		// Test 3
+    		testGetBirthMonthCounts(personsList,test);
+    		
     		
     }    
     
@@ -62,6 +71,13 @@ public class RunnerTest
         for(int n=0;n<3;n++) {
         		assertEquals(faviorteFoodsCount.get(n).getKey(), sortedList.get(n).getKey());
         }
+    }
+    
+    public void testGetBirthMonthCounts(List<Person> personList, int[] expectedMonthCounts) {
+    		int[] result = Runner.getBirthMonthCounts(personList);
+    		for(int m=0;m<12;m++) {
+    			assertEquals(result[m],expectedMonthCounts[m]);
+    		}
     }
 }
 
