@@ -48,7 +48,7 @@ public class Runner {
         }
 
 
-        
+        // Pass input file to respective method based on extension
         switch(getFileTypeFromExtension(args[0])) {
         		case "csv":
         			printOutput(csvLoad(args[0],false));
@@ -89,7 +89,7 @@ public class Runner {
 		return inputFile.substring(0,inputFile.lastIndexOf("."));
 }
     
- // Simple function to read a json file and create a list of Person objects    
+ // Simple function to read a csv file and create a list of Person objects    
     public static List<Person> csvLoad(String inputFile, boolean isGzip) {
     			Reader reader = null;
     			List<Person> csvPersons = new ArrayList<Person>();
@@ -104,6 +104,11 @@ public class Runner {
     				System.exit(0);
     				
     			} else if (!isGzip) {
+    				/*
+    				 * 
+    				 * Parsing of non-gzipped csv file 
+    				 * 
+    				 * */
     				try {
     					reader = Files.newBufferedReader(Paths.get(inputFile));		
     				} catch (IOException e) {
@@ -142,6 +147,11 @@ public class Runner {
 				System.exit(0);
 				
 			} else if (!isGzip) {
+				/*
+				 * 
+				 * Parsing of non-gzipped json file 
+				 * 
+				 * */
 				try {
 					reader = new JsonReader(new FileReader(inputFile));
 				} catch (FileNotFoundException e) {
@@ -194,6 +204,7 @@ public class Runner {
     }
     
     public static int[] getBirthMonthCounts(List<Person> personsList) {
+    		// Int array with each index for Months 1 - 12
 		int[] output = new int[12];
 		
 		for (Person person : personsList) {
