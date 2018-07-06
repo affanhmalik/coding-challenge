@@ -26,7 +26,9 @@ public class Person {
 	}
 	
 	public ZonedDateTime getBirthDateTime() {
-		ZonedDateTime birthDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(this.getBirth_timestamp()),ZoneId.of(this.getBirth_timzone()));
+		// Handle issue between "en dash" vs hyphen ("−08:00" vs "-08:00")
+		String zoneOffSetString = this.getBirth_timzone().replaceAll("−", "-");		
+		ZonedDateTime birthDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(this.getBirth_timestamp()),ZoneId.of(zoneOffSetString));
 		return birthDateTime;
 	}
 	public int getBirthMonth() {		
