@@ -2,19 +2,26 @@ package com.interset.interview;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 
 public class Runner {
 
@@ -41,28 +48,111 @@ public class Runner {
         }
 
 
-                
-        // Run Json file loader to get a Persons list
-        List<Person> jsonPersons = jsonLoad(args[0]);
         
-        // Print output
-        printOutput(jsonPersons);
-
+        switch(getFileTypeFromExtension(args[0])) {
+        		case "csv":
+        			printOutput(csvLoad(args[0],false));
+        			break;
+        		case "json":
+        			printOutput(jsonLoad(args[0],false));
+        			break;
+        		case "gz":
+        			gzipFileHandler(args[0]);        			
+        			break;
+    			default :
+    				// Nothing matches extension
+    				System.out.println("Input file must be JSON, CSV or Gzip file.");
+    	            System.exit(1);
+        }
+      
         
+            
 
     }
     
-    // Simple function to read a json file and create a list of Person objects    
-    public static List<Person> jsonLoad(String inputFile) {
-	    	JsonReader reader = null;
-			try {
-				reader = new JsonReader(new FileReader(inputFile));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+    public static void gzipFileHandler(String inputFile) {
+			if (getFileTypeFromExtension(getGzipFileTypeFromExtension(inputFile)) == "csv") {
+				printOutput(csvLoad(inputFile,true));
+			} else if (getFileTypeFromExtension(getGzipFileTypeFromExtension(inputFile)) == "json") {
+				printOutput(jsonLoad(inputFile,true));
+			} else {
+				System.out.println("Input Gzipped file must be valid JSON or CSV file.");
+	            System.exit(1);
 			}
-	    	List<Person> jsonPersons = new Gson().fromJson(
-	    	                                reader, 
-	    	                                new TypeToken<List<Person>>() {}.getType());
+    }
+    
+    public static String getFileTypeFromExtension(String inputFile) {
+    		return inputFile.substring(inputFile.lastIndexOf(".") + 1);
+    }
+    
+    public static String getGzipFileTypeFromExtension(String inputFile) {
+		return inputFile.substring(0,inputFile.lastIndexOf("."));
+}
+    
+ // Simple function to read a json file and create a list of Person objects    
+    public static List<Person> csvLoad(String inputFile, boolean isGzip) {
+    			Reader reader = null;
+    			List<Person> csvPersons = new ArrayList<Person>();
+    	
+    			if (isGzip) {
+    				/*
+    				 * 
+    				 * Tried to implement a gzip version of csvloader, but time constraints and technical challenge of converting CSVReader object to Reader prevented me from completing this part.  
+    				 *  
+    				 * */
+    				System.out.println("Gzip parsing of csv files not yet implemented");
+    				System.exit(0);
+    				
+    			} else if (!isGzip) {
+    				try {
+    					reader = Files.newBufferedReader(Paths.get(inputFile));		
+    				} catch (IOException e) {
+    					// TODO Auto-generated catch block
+    					e.printStackTrace();
+    				}
+    		        
+    		        CsvToBean<Person> csvToBean = new CsvToBeanBuilder(reader)
+    		                .withType(Person.class)
+    		                .withIgnoreLeadingWhiteSpace(true)
+    		                .build();
+    		        
+    		        
+    		        Iterator<Person> personIterator = csvToBean.iterator();
+    		        
+    		        while (personIterator.hasNext()) {
+    		        		csvPersons.add(personIterator.next());
+    		        }
+    			}      
+	        
+	        return csvPersons;
+    }
+    
+    // Simple function to read a json file and create a list of Person objects    
+    public static List<Person> jsonLoad(String inputFile, boolean isGzip) {
+	    	JsonReader reader = null;
+	    	List<Person> jsonPersons = new ArrayList<Person>();
+	    	
+			if (isGzip) {
+				/*
+				 * 
+				 * Could not implement gzip version of json loader within time. Potential idea was to use GZIPOutputStream for a BufferedOutputStream which gets converted by gson.toJson()  
+				 *  
+				 * */
+				System.out.println("Parsing of Gzipped json files not yet implemented");
+				System.exit(0);
+				
+			} else if (!isGzip) {
+				try {
+					reader = new JsonReader(new FileReader(inputFile));
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+		    		jsonPersons = new Gson().fromJson(
+		    	                                reader, 
+		    	                                new TypeToken<List<Person>>() {}.getType());
+			}
+			
+
 	    	return jsonPersons;
     }
     
@@ -140,7 +230,7 @@ public class Runner {
         String lastMonth = Month.of(12).name().toLowerCase();
 		lastMonth = lastMonth.substring(0, 1).toUpperCase() + lastMonth.substring(1);
         
-        System.out.print(lastMonth + " (" + birthMonths[11] + ")");
+        System.out.println(lastMonth + " (" + birthMonths[11] + ")");
         
         
     }

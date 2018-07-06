@@ -4,7 +4,6 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -41,8 +40,8 @@ public class RunnerTest
     		// Create expected output list
     		List<Entry<String, Integer>> expectedList = new ArrayList<Entry<String, Integer>>();
     		expectedList.add(new java.util.AbstractMap.SimpleEntry<String, Integer>("chicken", 3));
-    		expectedList.add(new java.util.AbstractMap.SimpleEntry<String, Integer>("Yogurt", 2));
-    		expectedList.add(new java.util.AbstractMap.SimpleEntry<String, Integer>("Mozzarella cheese", 1));
+    		expectedList.add(new java.util.AbstractMap.SimpleEntry<String, Integer>("yogurt", 2));
+    		expectedList.add(new java.util.AbstractMap.SimpleEntry<String, Integer>("mozzarella cheese", 1));
     		
     		// Test 2
     		testGetFaviorteFoodsCountFunction(personsList, expectedList);
@@ -78,6 +77,19 @@ public class RunnerTest
     		for(int m=0;m<12;m++) {
     			assertEquals(result[m],expectedMonthCounts[m]);
     		}
+    }
+    
+    @Test
+    public void testGetFileTypeFromExtension() {
+    		String file1 = "test.json";
+    		String file2 = "test.csv";
+    		String file3 = "period.test.csv";
+    		String file4 = "testnoextension";
+    		
+    		assertEquals(Runner.getFileTypeFromExtension(file1),"json");
+    		assertEquals(Runner.getFileTypeFromExtension(file2),"csv");
+    		assertEquals(Runner.getFileTypeFromExtension(file3),"csv");
+    		assertEquals(Runner.getFileTypeFromExtension(file4),"testnoextension");
     }
 }
 

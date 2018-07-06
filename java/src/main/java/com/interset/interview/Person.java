@@ -4,13 +4,26 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+import com.opencsv.bean.CsvBindByName;
+
 public class Person {
 	
+	@CsvBindByName
 	private String first_name;
+	
+	@CsvBindByName
 	private String last_name;
+	
+	@CsvBindByName
 	private int siblings;
+	
+	@CsvBindByName
 	private String favourite_food;
+	
+	@CsvBindByName
 	private String birth_timezone;
+	
+	@CsvBindByName
 	private long birth_timestamp;
 
 	
@@ -19,11 +32,13 @@ public class Person {
 		this.first_name = firstName;
 		this.last_name = lastName;
 		this.siblings = siblings;
-		this.favourite_food = favouriteFood;
+		this.favourite_food = favouriteFood.toLowerCase();
 		this.birth_timezone = timeZoneOffset;
 		this.birth_timestamp = birthTimestamp;
 		
 	}
+	
+	public Person() {}
 	
 	public ZonedDateTime getBirthDateTime() {
 		// Handle issue between "en dash" vs hyphen ("−08:00" vs "-08:00")
